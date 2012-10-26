@@ -20,6 +20,7 @@ module Resque
       def self.count(queue = nil, class_name = nil)
         if queue
           if class_name
+            puts "gots a class name!"
             n = 0
             each(0, count(queue), queue, class_name) { n += 1 } 
             n
@@ -51,8 +52,14 @@ module Resque
         end
       end
 
-      def self.clear(queue = :failed)
-        Resque.redis.del(queue)
+      def self.clear(queue = :failed, class_name = nil)
+        if class_name
+          each(0, count(queue), queue, class_name) do |id, _|
+            remove(id, queue)
+          end
+        else
+          Resque.redis.del(queue)
+        end
       end
 
       def self.requeue(id, queue = :failed)
@@ -68,13 +75,15 @@ module Resque
         Resque.redis.lrem(queue, 1,  sentinel)
       end
 
-      def self.requeue_queue(queue)
+      def self.requeue_queue(queue, class_name = nil)
         failure_queue = Resque::Failure.failure_queue_name(queue)
-        each(0, count(failure_queue), failure_queue) { |id, _| requeue(id, failure_queue) }
+        each(0, count(failure_queue), failure_queue, class_name) do |id, _|
+          requeue(id, failure_queue)
+        end
       end
 
-      def self.remove_queue(queue)
-        Resque.redis.del(Resque::Failure.failure_queue_name(queue))
+      def self.remove_queue(queue, class_name = nil)
+        clear Resque::Failure.failure_queue_name(queue), class_name
       end
 
       def filter_backtrace(backtrace)

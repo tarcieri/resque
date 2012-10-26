@@ -3,6 +3,35 @@ Resque::Server.helpers do
   #failed.erb helpers#
   ####################
 
+  def failed_queue_focus
+    if params[:class]
+      "'#{params[:class]}'"
+    elsif params[:queue]
+      "'#{params[:queue]}'"
+    else ''
+    end
+  end
+
+  def failed_queue_clear_label
+    "Clear #{failed_queue_focus} Jobs"
+  end
+
+  def failed_queue_requeue_label
+    "Retry #{failed_queue_focus} Jobs"
+  end
+
+  def failed_queue_clear_path
+    path = "failed#{'/' + params[:queue] if params[:queue]}/clear"
+    path << "?class=#{params[:class]}" if params[:class]
+    u path
+  end
+
+  def failed_queue_requeue_path
+    path = "failed#{'/' + params[:queue] if params[:queue]}/requeue/all"
+    path << "?class=#{params[:class]}" if params[:class]
+    u path
+  end
+
   def failed_date_format
     "%Y/%m/%d %T %z"
   end

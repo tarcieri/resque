@@ -64,7 +64,7 @@ module Resque
 
     # Returns the int count of how many failures we have seen.
     def self.count(queue = nil, class_name = nil)
-      backend.count(queue, class_name = nil)
+      backend.count(queue, class_name)
     end
 
     # Returns an array of all the failures, paginated.
@@ -86,28 +86,28 @@ module Resque
     end
 
     # Clear all failure jobs
-    def self.clear(queue = nil)
-      backend.clear(queue)
+    def self.clear(queue = nil, class_name = nil)
+      backend.clear(queue, class_name)
     end
 
-    def self.requeue(id)
-      backend.requeue(id)
+    def self.requeue(id, queue = nil)
+      backend.requeue(id, queue)
     end
 
-    def self.remove(id)
-      backend.remove(id)
+    def self.remove(id, queue = nil)
+      backend.remove(id, queue)
     end
     
     # Requeues all failed jobs in a specific queue.
     # Queue name should be a string.
-    def self.requeue_queue(queue)
-      backend.requeue_queue(queue)
+    def self.requeue_queue(queue, class_name = nil)
+      backend.requeue_queue(queue, class_name)
     end
 
     # Removes all failed jobs in a specific queue.
     # Queue name should be a string.
-    def self.remove_queue(queue)
-      backend.remove_queue(queue)
+    def self.remove_queue(queue, class_name = nil)
+      backend.remove_queue(queue, class_name)
     end
   end
 end

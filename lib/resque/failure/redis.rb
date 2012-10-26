@@ -46,8 +46,9 @@ module Resque
         end
       end
 
-      def self.clear(queue = nil)
+      def self.clear(queue = nil, class_name = nil)
         raise ArgumentError, "invalid queue: #{queue}" if queue && queue.to_s == "failed"
+        raise ArgumentError, "class_name parameter not supported" if class_name
         Resque.redis.del(:failed)
       end
 
@@ -64,7 +65,7 @@ module Resque
         Resque.redis.lrem(:failed, 1,  sentinel)
       end
 
-      def self.requeue_queue(queue)
+      def self.requeue_queue(queue, class_name = nil)
         i = 0
         while job = all(i)
            requeue(i) if job['queue'] == queue
@@ -72,7 +73,7 @@ module Resque
         end
       end
 
-      def self.remove_queue(queue)
+      def self.remove_queue(queue, class_name = nil)
         i = 0
         while job = all(i)
           if job['queue'] == queue

@@ -197,7 +197,7 @@ module Resque
     end
 
     post "/failed/:queue/clear" do
-      Resque::Failure.clear params[:queue]
+      Resque::Failure.clear params[:queue], params[:class]
       redirect u('failed')
     end
 
@@ -209,7 +209,7 @@ module Resque
     end
 
     post "/failed/:queue/requeue/all" do
-      Resque::Failure.requeue_queue Resque::Failure.job_queue_name(params[:queue])
+      Resque::Failure.requeue_queue Resque::Failure.job_queue_name(params[:queue]), params[:class]
       redirect url_path("/failed/#{params[:queue]}")
     end
 

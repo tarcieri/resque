@@ -5,11 +5,11 @@
 <% end %>
 
 <% unless failed_size.zero? %>
-<form method="POST" action="<%= u "failed#{'/' + params[:queue] if params[:queue]}/clear" %>">
-  <input type="submit" name="" value="Clear <%= params[:queue] ? "'#{params[:queue]}'" : 'Failed' %> Jobs" />
+<form method="POST" action="<%= failed_queue_clear_path %>">
+  <input type="submit" name="" value="<%= failed_queue_clear_label %>" />
 </form>
-<form method="POST" action="<%= u "failed#{'/' + params[:queue] if params[:queue]}/requeue/all" %>">
-  <input type="submit" name="" value="Retry <%= params[:queue] ? "'#{params[:queue]}'" : 'Failed' %> Jobs" />
+<form method="POST" action="<%= failed_queue_requeue_path %>">
+  <input type="submit" name="" value="<%= failed_queue_requeue_label %>" />
 </form>
 <% end %>
 
